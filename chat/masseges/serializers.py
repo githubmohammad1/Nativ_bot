@@ -17,7 +17,7 @@ class QuestionSerializer(serializers.ModelSerializer):
         model = Question
         fields = '__all__'
 
-class RatingSerializer(serializers.ModelSerializer):
+class AnserSerializer(serializers.ModelSerializer):
     class Meta:
         model = Anser
         fields = '__all__'
