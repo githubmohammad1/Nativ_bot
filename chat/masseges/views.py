@@ -1,7 +1,7 @@
 from rest_framework import request, status, viewsets
-from .models import Question,Anser
+from .models import Question,Anser,Conversation
 from .serializers import QuestionSerializer ,UserSerializer,AnserSerializer
-
+from django.contrib.auth.models import User
 from rest_framework.decorators import action, api_view
 from rest_framework.response import Response
 
@@ -24,48 +24,44 @@ class QuestionViewSet(viewsets.ModelViewSet):
 def addquestion(request):
     
     if request.method=='GET':
-        output = query({
-	"inputs": "teel me a story ",
-                  })
-        print(output)
-        # print(type(output))
-        # # Convert the output to a string
-        # output_string = str(output)
-        # print(output_string[24:-1])
-        # serializer=AnserSerializer(data=output_string)
-        # if serializer.is_valid():
-        #     serializer.save()
-        #     return Response(serializer.data)
-        # else:
-        #     return Response(serializer.data,status=status.HTTP_400_BAD_REQUEST)
-    
-# Store the string in a list
+        output = str(query({"inputs": "teel me a story ",}))
         
-
-# Now you can access the converted string in 'output_list'
+   
+        answer=Anser(anser=output)
+        answer.save()
+        print(answer.anser)
         
+        all_anser=Anser.objects.all()
+        print(all_anser)
         
+                
 
         question=Question.objects.latest('id')
         serializer=QuestionSerializer(question)
-        print(type(serializer.data))
-        import json
-        json_string = json.dumps(serializer.data)
 
-# Now 'json_string' contains the serialized JSON representation of 'return_dict'
-        print(json_string)
         return Response(serializer.data)
     
     elif  request.method=='POST':
         serializer=QuestionSerializer(data=request.data)
-        
         if serializer.is_valid():
-            serializer.save()
-            a=Anser()
-            a.anser=request.data['anser']
-            a.save()
             
-            print(a.anser)
+            # serializer.save()
+            
+            question=Question(question=serializer.data)
+            question.save()
+            print(question.question)
+ 
+            output=str(query({"inputs":str(serializer.data),}))
+            answer=Anser(anser=output)
+            answer.save()
+            print(answer.anser)
+            conver=Conversation(question=question,anser=answer,user=User.objects.get(pk=1)
+)
+            conver.save()
+            print(conver.anser)
+            # print(conver.question)
+            
+   
             
             return Response(serializer.data)
          

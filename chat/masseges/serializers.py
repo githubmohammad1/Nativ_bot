@@ -1,5 +1,5 @@
 from rest_framework import serializers, status
-from .models import Anser,Question
+from .models import Anser,Question,Conversation
 
 from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
@@ -20,4 +20,10 @@ class QuestionSerializer(serializers.ModelSerializer):
 class AnserSerializer(serializers.ModelSerializer):
     class Meta:
         model = Anser
+        fields = '__all__'
+
+
+class ConversationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Conversation
         fields = '__all__'
