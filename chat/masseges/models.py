@@ -10,7 +10,7 @@ class Question(models.Model):
 
 
 class Anser(models.Model):
-    anser = models.CharField(max_length=32)
+    anser = models.CharField(max_length=300)
     def __str__(self):
         
         return self.anser

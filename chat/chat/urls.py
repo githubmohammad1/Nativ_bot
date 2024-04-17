@@ -9,5 +9,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('masseges.urls')),
     path('tokenrequest/', obtain_auth_token),
-    path("add/",views.addquestion)
+    path("add/",views.addquestion),
+    path('', include('polls.urls')),
 ]

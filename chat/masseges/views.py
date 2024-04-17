@@ -13,7 +13,7 @@ from rest_framework.permissions import  AllowAny, IsAuthenticated, IsAdminUser, 
 
 from rest_framework.authtoken.models import Token
 from rest_framework.views import APIView
-
+from .gradio import *
 class QuestionViewSet(viewsets.ModelViewSet):
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
@@ -24,11 +24,41 @@ class QuestionViewSet(viewsets.ModelViewSet):
 def addquestion(request):
     
     if request.method=='GET':
+        output = query({
+	"inputs": "teel me a story ",
+                  })
+        print(output)
+        # print(type(output))
+        # # Convert the output to a string
+        # output_string = str(output)
+        # print(output_string[24:-1])
+        # serializer=AnserSerializer(data=output_string)
+        # if serializer.is_valid():
+        #     serializer.save()
+        #     return Response(serializer.data)
+        # else:
+        #     return Response(serializer.data,status=status.HTTP_400_BAD_REQUEST)
+    
+# Store the string in a list
+        
+
+# Now you can access the converted string in 'output_list'
+        
+        
+
         question=Question.objects.latest('id')
         serializer=QuestionSerializer(question)
+        print(type(serializer.data))
+        import json
+        json_string = json.dumps(serializer.data)
+
+# Now 'json_string' contains the serialized JSON representation of 'return_dict'
+        print(json_string)
         return Response(serializer.data)
+    
     elif  request.method=='POST':
         serializer=QuestionSerializer(data=request.data)
+        
         if serializer.is_valid():
             serializer.save()
             a=Anser()
