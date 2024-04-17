@@ -15,7 +15,7 @@ SECRET_KEY = 'django-insecure-y-01+bgtzia7_j1+rx-inx0bxwox-6x*z(qb&jgj2e5of!hb)1
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -30,23 +30,15 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'masseges' ,
-    'polls'
+    'polls',
+    'rest_framework.authtoken',
     
 ]
-CORS_ALLOW_METHODS = (
-    "DELETE",
-    "GET",
-    "OPTIONS",
-    "PATCH",
-    "POST",
-    "PUT",
-)
+
 
 CORS_ALLOW_ALL_ORIGINS: True
 MIDDLEWARE = [
-    "corsheaders.middleware.CorsMiddleware",
-    "django.middleware.common.CommonMiddleware",
-    
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -57,6 +49,8 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'chat.urls'
+
+CORS_ORIGIN_ALLOW_ALL =True
 
 TEMPLATES = [
     {
@@ -130,3 +124,16 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = "/"
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],}
+
+
+
+
+
+
