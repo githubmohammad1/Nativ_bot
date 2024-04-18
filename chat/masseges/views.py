@@ -14,9 +14,32 @@ from rest_framework.permissions import  AllowAny, IsAuthenticated, IsAdminUser, 
 from rest_framework.authtoken.models import Token
 from rest_framework.views import APIView
 from .gradio import *
+
+class UsersViewSet(viewsets.ModelViewSet):
+
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    # authentication_classes = [TokenAuthentication]
+    # permission_classes = [IsAuthenticated]
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        token, created = Token.objects.get_or_create(user=serializer.instance)
+        return Response({
+                'token': token.key, 
+                }, 
+            status=status.HTTP_201_CREATED)
+    
+    
+
 class QuestionViewSet(viewsets.ModelViewSet):
+
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    
 
 
 @api_view(['GET','POST'])

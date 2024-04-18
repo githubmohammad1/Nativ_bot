@@ -16,9 +16,9 @@ path("predict/<int:test_number>/", views.predict, name="predict"),
 
 path("add_question/<str:test_text>", views.addquestion, name="addquestion"),
 
-path('',view_dtl,name='dtl'),
+path('dtl',view_dtl,name='dtl'),
 
 
-path('view/',view_question,name='question'),
+path('',view_question,name='question'),
 
 ]

@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'masseges' ,
     'polls',
     'rest_framework.authtoken',
+    #'accounts',
     
 ]
 
@@ -129,7 +130,9 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
+        
         'rest_framework.authentication.TokenAuthentication',
+    
     ],}
 
 
