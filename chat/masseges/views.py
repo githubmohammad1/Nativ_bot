@@ -1,37 +1,41 @@
 from rest_framework import request, status, viewsets
-from .models import Question,Anser,Conversation
-from .serializers import QuestionSerializer ,UserSerializer,AnserSerializer,ConversationSerializer
+from .models import *
+from .serializers import *
 from django.contrib.auth.models import User
-from rest_framework.decorators import action, api_view
+
+from rest_framework.decorators import action, api_view,authentication_classes
+from rest_framework.permissions import IsAuthenticated
+
 from rest_framework.response import Response
 from django.http import HttpResponse
 from django.contrib.auth.models import User
 
 from rest_framework.authentication import TokenAuthentication
-
-from rest_framework.permissions import  AllowAny, IsAuthenticated, IsAdminUser, IsAuthenticatedOrReadOnly
+# from rest_framework.authtoken.views import ObtainAuthToken
+# from rest_framework.permissions import  AllowAny, IsAuthenticated, IsAdminUser, IsAuthenticatedOrReadOnly
 
 from rest_framework.authtoken.models import Token
-from rest_framework.views import APIView
+# from rest_framework.views import APIView
 from .gradio import *
 
-class UsersViewSet(viewsets.ModelViewSet):
+from django.core.exceptions import ObjectDoesNotExist
+
+class UsersRegister(viewsets.ModelViewSet):
 
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    # authentication_classes = [TokenAuthentication]
-    # permission_classes = [IsAuthenticated]
+
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         token, created = Token.objects.get_or_create(user=serializer.instance)
+        print(request.data)
         return Response({
                 'token': token.key, 
                 }, 
             status=status.HTTP_201_CREATED)
-    
-    
+
 
 class QuestionViewSet(viewsets.ModelViewSet):
 
@@ -43,6 +47,7 @@ class QuestionViewSet(viewsets.ModelViewSet):
 
 
 @api_view(['GET','POST'])
+@authentication_classes([TokenAuthentication])
 
 def addquestion(request):
     
@@ -70,10 +75,7 @@ def addquestion(request):
             output=chatting(remasseg)
             # output=query({"inputs":serializer.data["question"],})
             # Assuming you want to use the first response
-            
-            
 
-            
             answer=Anser(anser=output)
             
             answer.save()
@@ -82,12 +84,9 @@ def addquestion(request):
             
             
             conver.save()
-            
-            
+      
             # print(conver.question)
-            
-   
-            
+         
             return HttpResponse(conver.anser)#Response(r)
          
         
@@ -101,8 +100,27 @@ def addquestion(request):
 @api_view(['GET','POST'])
 def test_flutterapp(request):
     queryset = Question.objects.all()
+    # token, created = Token.objects.get_or_create(user=User.objects.get(pk=1))
     return HttpResponse("wlkom to django servereeeeeeeeeeeeeeeeeeeeennnnnnnnnnnnnndddddddddddddddddddddddsspeeeeeeeeek")
-            
+# Response({
+#             'token': token.key,
+#         })
+
+
+ 
+
+
+
+@api_view(['GET','POST'])
+def login(request):
+    username = request.data.get('username')
+    try:
+        user = User.objects.get(username=username)
+        token, created = Token.objects.get_or_create(user=user)
+        return Response({ 'token': token.key,})
+    except User.DoesNotExist:
+        return Response({'error': 'اسم المستخدم غير موجود'}, status=400)
+
         
         
         
