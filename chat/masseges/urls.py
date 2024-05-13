@@ -16,6 +16,6 @@ urlpatterns = [
     path('add',addquestion),#                               معالجة السؤال
     path("test",test_flutterapp),
     path("login",login),#                          تسسسسسسسسسسسسسسسسجيييييييييييييلل الدخوووووووووووول
-
+    path("replic",run_model),
 
 ]

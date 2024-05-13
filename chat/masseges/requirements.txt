@@ -1,0 +1,7 @@
+python-dotenv
+langchain
+replicate
+langchain_core
+langchain_community
+rest_framework
+django

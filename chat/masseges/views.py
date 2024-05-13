@@ -16,7 +16,7 @@ from rest_framework.authentication import TokenAuthentication
 
 from rest_framework.authtoken.models import Token
 # from rest_framework.views import APIView
-from .gradio import *
+# from .gradio import *
 
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -114,8 +114,10 @@ def test_flutterapp(request):
 @api_view(['GET','POST'])
 def login(request):
     username = request.data.get('username')
+    email= request.data.get('email')
     try:
-        user = User.objects.get(username=username)
+        user = User.objects.get(username=username,email =email)
+        
         token, created = Token.objects.get_or_create(user=user)
         return Response({ 'token': token.key,})
     except User.DoesNotExist:
@@ -125,3 +127,28 @@ def login(request):
         
         
         
+from django.http import JsonResponse
+# from django.views.decorators.csrf import csrf_exempt
+from rest_framework.decorators import api_view
+# from .models import YourModel  # قم بتعيين النموذج الخاص بك إذا كان لديك
+
+# @csrf_exempt  # تعطيل التحقق من صحة رمز الحماية المشتركة (CSRF)
+@api_view(['POST'])  # تحديد الطرق المقبولة للطلبات
+def run_model(request):
+    if request.method == 'POST':
+        # استدعاء النموذج هنا واسترداد النتيجة
+        # يمكنك استخدام chain_with_message_history.invoke() هنا لتشغيل النموذج
+        
+        # على سبيل المثال:
+        output = chain_with_message_history.invoke(
+            {"input": request.POST.get('input_text')},
+            {"configurable": {"session_id": "001"}},
+        )
+
+        # تنسيق الاستجابة بشكل صحيح، عادةً ما يكون بتنسيق JSON
+        response_data = {
+            'output': output,
+        }
+        return JsonResponse(response_data)
+    else:
+        return JsonResponse({'error': 'Invalid request method'})
