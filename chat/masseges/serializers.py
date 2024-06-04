@@ -1,5 +1,5 @@
 from rest_framework import serializers, status
-from .models import Anser,Question,Conversation
+from .models import Answer,Question,Conversation
 from rest_framework.authtoken.views import ObtainAuthToken
 from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
@@ -18,15 +18,35 @@ class UserSerializer(serializers.ModelSerializer):
 class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question
-        fields = '__all__'
+        fields = ['question']
 
-class AnserSerializer(serializers.ModelSerializer):
+class AnswerSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Anser
-        fields = '__all__'
+        model = Answer
+        fields = ['answer']
 
 
+
+
+
+        
 class ConversationSerializer(serializers.ModelSerializer):
+    question = serializers.CharField(source='question.question')
+    answer = serializers.CharField(source='answer.answer')
+
     class Meta:
         model = Conversation
-        fields = '__all__'
+        fields = ['question', 'answer']
+        
+
+
+
+# class ConversationSerializer(serializers.ModelSerializer):
+#     question = QuestionSerializer(read_only=True)
+#     answer = AnswerSerializer(read_only=True)
+
+#     class Meta:
+#         model = Conversation
+#         fields = [
+#           #  'chat_id',
+#             'question', 'answer']

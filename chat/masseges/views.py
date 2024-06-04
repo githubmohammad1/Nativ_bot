@@ -49,7 +49,7 @@ class QuestionViewSet(viewsets.ModelViewSet):
 @api_view(['GET','POST'])
 @authentication_classes([TokenAuthentication])
 
-def addquestion(request):
+def addquestion(request,):
     
     if request.method=='GET':
         
@@ -58,56 +58,79 @@ def addquestion(request):
     elif  request.method=='POST':
         
         serializer=QuestionSerializer(data=request.data)
-        if serializer.is_valid():
-            
-            # serializer.save()
-            
+        if serializer.is_valid():   
             question=Question(question=serializer.data)
             question.save()
-            
-            # strr=serializer.data
-            # print(strr)
-            # strr=strr["question"]
-            # print(strr)
-            # output=my_client(strr)
             remasseg=str(question.question)
-            # output=chatting(question.question)
             output=chatting(remasseg)
-            # output=query({"inputs":serializer.data["question"],})
-            # Assuming you want to use the first response
-
-            answer=Anser(anser=output)
-            
+            answer=Answer(answer=output)
             answer.save()
-            
-            conver=Conversation(question=question,anser=answer,user=User.objects.get(pk=1))
-            
-            
+            conver=Conversation(question=question,answer=answer,user=User.objects.get(pk=1))
             conver.save()
-      
-            # print(conver.question)
+            return HttpResponse(conver.answer)
          
-            return HttpResponse(conver.anser)#Response(r)
+        
+        return Response(serializer.data,status=status.HTTP_400_BAD_REQUEST)
+
+
+
+@api_view(['GET','POST'])
+def return_conversation(request):
+    
+    if request.method=='GET':
+        
+        return Response("pleas make post rquest")
+    
+    elif  request.method=='POST':
+        conversations = Conversation.objects.filter(chat_id=request.data["chat_id"])
+       
+        
+        serializer=ConversationSerializer(conversations, many=True)
+        
+        return Response(serializer.data)
+    
+
          
+    else:
+    
         
         return Response(serializer.data,status=status.HTTP_400_BAD_REQUEST)
     
         
-        
+@api_view(['POST'])
+def add_question_and_answer(request):
+    if request.method == 'POST':
+      
+        question_text = request.data.get('question', '')
+   
+        uppercase_answer = question_text.upper()
+
+      
+        question = Question.objects.create(question=question_text)
+        answer = Answer.objects.create(answer=uppercase_answer)
+
+
+        conversation = Conversation.objects.create(
+            question=question,
+            answer=answer,
+            user=User.objects.get(username=request.data["username"]), # افتراضًا، يمكنك تعديل هذا حسب نموذج المستخدم الخاص بك
+            chat_id=request.data["chat_id"], # افتراضًا، يمكنك تعديل هذا حسب رقم المحادثة
+        )
+        serializer=ConversationSerializer(conversation,)
+        respons=Conversation.objects.filter(chat_id=1)
+ 
+        return Response(serializer.data['answer'],status=201)
+    else:
+        return Response("Invalid request method", status=status.HTTP_400_BAD_REQUEST)        
  
 
 
 @api_view(['GET','POST'])
 def test_flutterapp(request):
     queryset = Question.objects.all()
-    # token, created = Token.objects.get_or_create(user=User.objects.get(pk=1))
-    return HttpResponse("wlkom to django servereeeeeeeeeeeeeeeeeeeeennnnnnnnnnnnnndddddddddddddddddddddddsspeeeeeeeeek")
-# Response({
-#             'token': token.key,
-#         })
+    
+    return HttpResponse("wlkom to django server")
 
-
- 
 
 
 

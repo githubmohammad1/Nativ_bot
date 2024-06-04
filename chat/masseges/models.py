@@ -9,17 +9,19 @@ class Question(models.Model):
     
 
 
-class Anser(models.Model):
-    anser = models.CharField(max_length=300)
+class Answer(models.Model):
+    answer = models.CharField(max_length=300)
     def __str__(self):
         
-        return self.anser
+        return self.answer
     
     
 class Conversation(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    anser=models.ForeignKey(Anser, on_delete=models.CASCADE)
+    answer=models.ForeignKey(Answer, on_delete=models.CASCADE)
+    chat_id=models.IntegerField(models.AutoField())
+    
     
     # def __str__(self):
         
