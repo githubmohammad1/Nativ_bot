@@ -95,6 +95,15 @@ def return_conversation(request):
     
         
         return Response(serializer.data,status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST'])
+def receiveaudio(request):
+    if request.method == 'POST':
+        audiodata = request.data # استلام البيانات الصوتية المُرسلة
+
+        # قم بإجراء المعالجة اللازمة هنا - مثل اتخاذ إجراء مع البيانات الصوتية
+
+        return Response({'message': 'تم استلام الصوت بنجاح'}) # إرجاع رسالة 
     
         
 @api_view(['POST'])

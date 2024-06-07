@@ -29,7 +29,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'masseges' ,
+    #'masseges' ,
+    'masseges.apps.MassegesConfig' ,
     
     'rest_framework.authtoken',
     #'accounts',
@@ -129,8 +130,8 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 
 #REST_FRAMEWORK = {
-  #  'DEFAULT_AUTHENTICATION_CLASSES': [
-        
+    #'DEFAULT_AUTHENTICATION_CLASSES': [
+    # 'rest_framework.permissions.AllowAny',   
     #    'rest_framework.authentication.TokenAuthentication',
     
     #],}
